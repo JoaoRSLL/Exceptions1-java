@@ -1,7 +1,9 @@
 package application;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import model.entities.Reservation;
@@ -12,6 +14,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
+		try {
 		System.out.println("Room number: ");
 		int number = sc.nextInt();
 		System.out.println("Check-in date (dd/MM/yyyy): ");
@@ -19,31 +22,27 @@ public class Main {
 		System.out.println("Check-out date (dd/MM/yyyy): ");
 		LocalDate checkOut = LocalDate.parse(sc.next(), sdf);
 		
-		if(!checkOut.isAfter(checkIn)) {
-			System.out.println("Error in reservation: Check-out date must be after check-in date");
+
+		Reservation reservation = new Reservation(number, checkIn, checkOut);
+		System.out.println("Reservation: " + reservation);
+		
+		System.out.println();
+		System.out.println("Enter data to update the reservation: ");
+		System.out.println("Check-in date (dd/MM/yyyy): ");
+		checkIn = LocalDate.parse(sc.next(), sdf);
+		System.out.println("Check-out date (dd/MM/yyyy): ");
+		checkOut = LocalDate.parse(sc.next(), sdf);
+		
+		reservation.updateDates(checkIn, checkOut);
+		System.out.println("Reservation: " + reservation);
+		
+		} catch(DateTimeParseException e){
+			System.out.println("Invalid date formart");	
 		}
-		else {
-			Reservation reservation = new Reservation(number, checkIn, checkOut);
-			System.out.println("Reservation: " + reservation);
-			
-			System.out.println();
-			System.out.println("Enter data to update the reservation: ");
-			System.out.println("Check-in date (dd/MM/yyyy): ");
-			checkIn = LocalDate.parse(sc.next(), sdf);
-			System.out.println("Check-out date (dd/MM/yyyy): ");
-			checkOut = LocalDate.parse(sc.next(), sdf);
-			
-			String error = reservation.updateDates(checkIn, checkOut);
-			if (error != null) {
-				System.out.println(error);
-			}
-			
-			else { 
-				System.out.println("Reservation: " + reservation);
-			}
-			
-			
-		}
+		catch(IllegalArgumentException e){
+			System.out.println("Error in reservation: " + e.getMessage());	
+		}	
+		
 		sc.close();
 	}
 
