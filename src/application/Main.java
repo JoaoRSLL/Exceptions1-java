@@ -40,7 +40,7 @@ public class Main {
 			System.out.println("Invalid date formart");	
 		}
 		catch(IllegalArgumentException e){
-			System.out.println("Error in reservation: " + e.getMessage());	
+			System.out.println(e.getMessage());	
 		}	
 		
 		sc.close();
